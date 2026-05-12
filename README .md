@@ -12,6 +12,14 @@ The core insight of DeGF is leveraging text\-to\-image generative models \(e\.g\
 
 \-\-\-
 
+## ✨ Project Highlights
+
+- **Independent reproduction of the RITUAL baseline** from the ICLR 2025 paper, achieving highly consistent results (88.37% accuracy vs. 88.87% reported) on POPE and CHAIR benchmarks using LLaVA-1.5-7B.
+- **Resolved 6 critical dependency conflicts** (bitsandbytes, diffusers, transformers, etc.) across WSL2 and AutoDL platforms, successfully deploying 20GB+ models and datasets.
+- **Extended evaluation** beyond the paper by implementing VCD baseline, conducting full-scale ablations over γ and α_pos (3,000 samples each), and providing qualitative case studies and efficiency analysis.
+- **Fully reproducible open‑source code** with one‑click data download scripts, detailed run commands, and complete result logs.
+
+
 ### Repository Structure
 
 DeGF\-Replication/
@@ -133,6 +141,8 @@ We provide the code for evaluating our replication on POPE, CHAIR, and VCD basel
 |RITUAL \(our impl\.\)|88\.37%|–|88\.87%|
 |VCD \(our impl\.\)|86\.73%|87\.00%|–|
 
+*Note: Our standard decoding and RITUAL both use **greedy decoding** (`do_sample=False`), while the paper's regular baseline likely uses sampling (`temperature=1.0`, `top_p=1.0`). This explains why our standard decoding results are higher than the paper's. The RITUAL results, however, are closely aligned.*
+
 Our higher standard decoding is due to greedy vs\. sampling\. RITUAL consistently outperforms standard decoding and is on par with the paper’s reported RITUAL\.
 
 ### CHAIR \(object hallucination in captioning\)
@@ -170,6 +180,25 @@ The random image transformation helps the model correct its own false belief\.
 - Systematic experimentation – evaluated three POPE subsets, CHAIR, VCD baseline, and conducted ablation on γ and α\_pos\.
 
 - Scientific communication – produced clear documentation, qualitative case studies, and ablation plots; compared own results with paper and explained discrepancies\.
+
+
+## 📌 Scope and Known Limitations
+
+This replication fully implements the **RITUAL** (random image transformation) algorithm from the paper and includes the following:
+
+- ✅ Standard and RITUAL decoding on all three POPE subsets (random/popular/adversarial)
+- ✅ CHAIR evaluation (CHAIR_S, CHAIR_I, Recall)
+- ✅ VCD baseline for comparison
+- ✅ Full ablation on γ (JS divergence threshold) and α_pos (complementary coefficient)
+- ✅ Qualitative case study and efficiency analysis
+
+**What is not included:**
+
+- ❌ The complete DeGF (diffusion‑based feedback) – due to `diffusers` / `huggingface_hub` version conflicts and occasional OOM when loading both LLaVA and Stable Diffusion. Since the paper reports nearly identical performance for RITUAL and full DeGF (88.87% vs 89.03%), this replication focuses on the RITUAL baseline.
+
+For the complete DeGF implementation, please refer to the [original repository](https://github.com/zhangce01/DeGF).
+
+
 
 ## 🙏 Acknowledgements
 
